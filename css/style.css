@@ -176,15 +176,15 @@ footer ul {
 
 
 
-/*.p-b {
+.p-b {
     padding-bottom: 20px;
-}*/
+}
 
-/*#idTranslation {
+#idTranslation {
     display: flex;
     padding-top: 20px;
     padding-bottom: 25px;
-}*/
+}
 
 #myBtn {
     display: none;
