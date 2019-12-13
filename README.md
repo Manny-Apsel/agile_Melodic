@@ -1,5 +1,5 @@
 # agile-Melodic
-Website: https://manny-apsel.github.io/agile_Melodic/
+Website: https://manny-apsel.github.io/agile_Melodic/index.html
 
 Forked from: https://github.com/Jeroen-Jozef/agile-Melodic/tree/bernardo
 
