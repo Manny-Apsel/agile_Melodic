@@ -1,5 +1,5 @@
 //reset results
-function reset(){
+function reset() {
     document.getElementById("idOriginal").innerHTML = "";
     document.getElementById("idTranslated").innerHTML = "";
     var strong1 = document.createElement("strong");
@@ -13,7 +13,7 @@ function reset(){
 }
 
 //error message
-function errorMsg(msg){
+function errorMsg(msg) {
     alert(msg);
     document.querySelector("input[type='button']").disabled = false;
 }
@@ -38,22 +38,26 @@ function returnText(data) {
 
 //fetch search song
 function getData(artist, song, countryCodeTranslation) {
-    artist = artist.replace(/\s/g, "%2520");
-    song = song.replace(/\s/g, "%2520");
+    // /\s/g is a regular expression covering all white space
+    // the white space is replaced to %2520 because the api weblink doesn't recognize
+    // white space; this is needed because some songs & artists have 2 or more words
+    try {
+        artist = artist.replace(/\s/g, "%2520");
+        song = song.replace(/\s/g, "%2520");
 
-    if (artist === "" || song===""){
-        errorMsg("please fill in the form");
-        return;
+        if (artist === "" || song === "") throw "please fill in the form";
+
+    } catch (e) {
+        errorMsg(e)
     }
+
 
     let url = `https://api-gateway-becode.herokuapp.com/?goto=http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect%3Fartist%3D${artist}%26song%3D${song}`;
 
-    console.log(url);
     fetch(url, {
         "method": "GET",
     })
         .then(response => {
-            console.log(url);
             return response.text();
         })
 
@@ -64,15 +68,14 @@ function getData(artist, song, countryCodeTranslation) {
                 xmlDoc = parser.parseFromString(data, 'text/xml');
 
             let text = xmlDoc.getElementsByTagName('Lyric')[0].innerHTML;
-
-            if (text === ""){
-                errorMsg("no data found");
-                return;
+            try {
+                if (text === "") throw "no data/lyrics found";
+            }
+            catch (e) {
+                errorMsg(e);
             }
 
-            console.log(text);
             let textArray = text.split("\n");
-            console.log("text fetched",textArray);
 
             for (let i = 0; i < textArray.length; i++) {
                 if (textArray[i] === "") {
@@ -92,7 +95,7 @@ function getData(artist, song, countryCodeTranslation) {
                 await fetchTranslateText(textArray[i], countryCodeTranslation)
                     .then(function (data) {
                         returnText(data);
-                        if (i === textArray.length-1){
+                        if (i === textArray.length - 1) {
                             document.querySelector("input[type='button']").disabled = false;
                         }
                     })
@@ -117,18 +120,20 @@ function scrollFunction() {
         mybutton.style.display = "none";
     }
 }
+
 function topFunction() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
 
-window.onscroll = function() {scrollFunction()};
+window.onscroll = function () {
+    scrollFunction()
+};
 
 document.getElementById("idSearchButton").addEventListener("click", async function () {
     let song = document.getElementById("idSearchBar").value;
     let artist = document.getElementById("artist").value;
     let countryCode = document.getElementById("idLanguageCode").value;
-    console.log(countryCode);
     await reset();
     getData(artist, song, countryCode);
 });

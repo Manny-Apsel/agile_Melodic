@@ -52,17 +52,17 @@
 
 .showUp {
     width: 0;
-    animation: reveal 3s infinite;
+    animation: reveal 6.5s infinite;
 }
 
 @keyframes reveal {
     0% {
         opacity: 0;
     }
-    20% {
+    22.5% {
         opacity: 1;
     }
-    80% {
+    77.5% {
         opacity: 1;
     }
     100% {
